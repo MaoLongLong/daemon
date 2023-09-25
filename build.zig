@@ -13,15 +13,17 @@ pub fn build(b: *std.build.Builder) void {
         .link_libc = true,
     });
     exe.strip = strip;
-    exe.addCSourceFiles(&.{
-        "src/log.c",
-        "src/main.c",
-    }, &.{
+
+    const cflags = &[_][]const u8{
         "-Wall",
-        "-W",
+        "-Wextra",
+        "-Werror",
         "-pedantic",
         "-std=c99",
-        "-DLOG_USE_COLOR",
+    };
+    exe.addCSourceFile(.{
+        .file = .{ .path = "daemon.c" },
+        .flags = cflags,
     });
 
     b.installArtifact(exe);
